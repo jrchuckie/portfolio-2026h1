@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>查克的工作 Portfolio · 2026 H1</title>
+<style>
+  :root {
+    --red: #FF2442;
+    --red-light: #fff0f2;
+    --red-mid: #ffd0d8;
+    --dark: #1a1a2e;
+    --gray: #6b7280;
+    --gray-light: #f9fafb;
+    --text: #1f2937;
+    --border: #e5e7eb;
+    --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    --shadow-hover: 0 4px 16px rgba(0,0,0,0.1), 0 8px 32px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f4f5f8; color: var(--text); line-height: 1.6; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #12111e 0%, #1c1a35 45%, #0e2d52 100%);
+    color: white; padding: 64px 40px 56px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; top: -80px; right: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,36,66,0.2) 0%, transparent 70%); border-radius: 50%; }
+  .hero::after { content: ''; position: absolute; bottom: -100px; left: -60px; width: 360px; height: 360px; background: radial-gradient(circle, rgba(255,36,66,0.1) 0%, transparent 70%); border-radius: 50%; }
+  .hero-inner { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }
+  .avatar { width: 76px; height: 76px; background: linear-gradient(135deg, #FF2442, #ff6b7a); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px; box-shadow: 0 0 0 3px rgba(255,255,255,0.12), 0 8px 24px rgba(255,36,66,0.4); }
+  .hero h1 { font-size: 34px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
+  .hero-sub { font-size: 15px; color: rgba(255,255,255,0.55); margin-bottom: 28px; }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .hero-tag { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.75); padding: 5px 14px; border-radius: 20px; font-size: 12px; }
+
+  /* Stats */
+  .stats-bar { background: white; border-bottom: 1px solid var(--border); }
+  .stats-inner { max-width: 1100px; margin: 0 auto; display: flex; }
+  .stat-item { flex: 1; text-align: center; padding: 20px 12px; border-right: 1px solid var(--border); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-size: 26px; font-weight: 800; color: var(--red); line-height: 1; }
+  .stat-label { font-size: 11px; color: var(--gray); margin-top: 4px; }
+
+  /* Nav */
+  .nav-wrap { background: white; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 8px rgba(0,0,0,0.05); }
+  .nav { max-width: 1100px; margin: 0 auto; display: flex; overflow-x: auto; }
+  .nav-btn { padding: 14px 18px; font-size: 13px; font-weight: 500; color: var(--gray); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; }
+  .nav-btn:hover { color: var(--red); }
+  .nav-btn.active { color: var(--red); border-bottom-color: var(--red); font-weight: 600; }
+
+  /* Main */
+  .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .section-header { margin-bottom: 24px; }
+  .section-title { font-size: 20px; font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+  .section-desc { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+  /* Grid */
+  .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+  .full-width { grid-column: 1 / -1; }
+
+  /* Card */
+  .card { background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; }
+  .card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .card-head { padding: 20px 22px 16px; border-bottom: 1px solid #f0f0f0; }
+  .card-icon-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+  .card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .badge { font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 7px; }
+  .badge-done { background: #dcfce7; color: #15803d; }
+  .badge-live { background: #dbeafe; color: #1d4ed8; }
+  .card-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .card-tagline { font-size: 12.5px; color: var(--gray); line-height: 1.55; font-style: italic; }
+
+  /* Card body sections */
+  .card-body { padding: 18px 22px; }
+  .sec-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #9ca3af; margin-bottom: 8px; margin-top: 18px; display: flex; align-items: center; gap: 5px; }
+  .sec-label:first-child { margin-top: 0; }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: #f0f0f0; }
+  .body-text { font-size: 13.5px; color: #374151; line-height: 1.75; }
+
+  /* Steps */
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .steps li { font-size: 13px; color: #374151; padding-left: 22px; position: relative; line-height: 1.65; }
+  .steps li::before { content: attr(data-n); position: absolute; left: 0; top: 3px; width: 16px; height: 16px; background: var(--red); color: white; border-radius: 50%; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+  /* Impact */
+  .impacts { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .impacts li { font-size: 13px; color: #374151; padding-left: 18px; position: relative; line-height: 1.65; }
+  .impacts li::before { content: '▸'; position: absolute; left: 0; color: var(--red); font-size: 12px; top: 2px; }
+
+  /* Brand chips */
+  .brand-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .brand-chip { background: #fff0f2; color: #c81e3a; border: 1px solid #ffd0d8; font-size: 11.5px; padding: 3px 9px; border-radius: 6px; font-weight: 500; }
+  .brand-chip.blue { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+  .brand-chip.green { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+  .brand-chip.gray { background: #f3f4f6; color: #4b5563; border-color: #e5e7eb; }
+
+  /* Tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tag { background: #f3f4f6; color: #6b7280; font-size: 11px; padding: 3px 8px; border-radius: 5px; }
+
+  /* Links */
+  .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .link-btn { font-size: 12px; color: var(--red); text-decoration: none; padding: 5px 11px; background: var(--red-light); border-radius: 6px; border: 1px solid var(--red-mid); transition: all 0.15s; }
+  .link-btn:hover { background: var(--red-mid); }
+
+  /* Overview mini cards */
+  .overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+  .mini-card { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 18px; display: flex; gap: 14px; align-items: flex-start; transition: box-shadow 0.15s; }
+  .mini-card:hover { box-shadow: var(--shadow); }
+  .mini-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .mini-content { flex: 1; }
+  .mini-title { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+  .mini-desc { font-size: 12px; color: var(--gray); line-height: 1.55; }
+  .mini-impact { font-size: 11.5px; color: var(--red); margin-top: 7px; font-weight: 600; }
+
+  /* Timeline */
+  .timeline { padding-left: 22px; position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(to bottom, var(--red), #e5e7eb); border-radius: 2px; }
+  .tl-item { position: relative; margin-bottom: 30px; }
+  .tl-dot { position: absolute; left: -19px; top: 5px; width: 12px; height: 12px; background: var(--red); border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 2px var(--red-mid); }
+  .tl-month { font-size: 11.5px; font-weight: 700; color: var(--red); letter-spacing: 0.5px; margin-bottom: 8px; }
+  .tl-events { display: flex; flex-direction: column; gap: 7px; }
+  .tl-event { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #374151; display: flex; gap: 9px; align-items: flex-start; }
+  .tl-ico { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Color bg helpers */
+  .bg-red { background: #fff0f2; }
+  .bg-blue { background: #eff6ff; }
+  .bg-green { background: #f0fdf4; }
+  .bg-purple { background: #faf5ff; }
+  .bg-orange { background: #fff7ed; }
+  .bg-teal { background: #f0fdfa; }
+  .bg-yellow { background: #fefce8; }
+  .bg-pink { background: #fdf2f8; }
+  .bg-gray { background: #f3f4f6; }
+
+  /* Quote block */
+  .quote-block { background: #fff8f0; border-left: 3px solid #f97316; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 12px 0; font-size: 13px; color: #92400e; line-height: 1.7; font-style: italic; }
+
+  /* Highlight box */
+  .highlight { background: var(--red-light); border: 1px solid var(--red-mid); border-radius: 8px; padding: 12px 14px; margin-top: 12px; }
+  .highlight-title { font-size: 11px; font-weight: 700; color: var(--red); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .highlight-text { font-size: 13px; color: #374151; line-height: 1.65; }
+
+  @media (max-width: 640px) {
+    .hero { padding: 40px 20px 36px; }
+    .hero h1 { font-size: 26px; }
+    .stats-inner { flex-wrap: wrap; }
+    .stat-item { min-width: 50%; border-right: none; border-bottom: 1px solid var(--border); }
+    .main { padding: 20px 14px 60px; }
+    .project-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="avatar">🌶️</div>
+    <h1>查克（邓宇頔）</h1>
+    <div class="hero-sub">小红书商业化 · 行业策略 &amp; 数据智能 · 2026 H1</div>
+    <div class="hero-tags">
+      <span class="hero-tag">品牌广告</span>
+      <span class="hero-tag">UGC 情绪分析</span>
+      <span class="hero-tag">快消赛道策略</span>
+      <span class="hero-tag">电商经营分析</span>
+      <span class="hero-tag">数据看板</span>
+      <span class="hero-tag">运营自动化</span>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-num">15+</div><div class="stat-label">品牌情绪看板</div></div>
+    <div class="stat-item"><div class="stat-num">50万+</div><div class="stat-label">笔记 AI 打标</div></div>
+    <div class="stat-item"><div class="stat-num">20</div><div class="stat-label">赛道战略分层</div></div>
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">自动化日更系统</div></div>
+    <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">核心项目线</div></div>
+  </div>
+</div>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <button class="nav-btn active" onclick="switchTab('all',this)">🗂 全览</button>
+    <button class="nav-btn" onclick="switchTab('brand-ugc',this)">❤️ 品牌广告 &amp; 情绪分析</button>
+    <button class="nav-btn" onclick="switchTab('strategy',this)">🎯 快消战略框架</button>
+    <button class="nav-btn" onclick="switchTab('ops',this)">📊 大促运营系统</button>
+    <button class="nav-btn" onclick="switchTab('ec',this)">🏭 电商经营分析</button>
+    <button class="nav-btn" onclick="switchTab('infra',this)">⚙️ 数据工程</button>
+    <button class="nav-btn" onclick="switchTab('timeline',this)">📅 时间线</button>
+  </nav>
+</div>
+
+<div class="main">
+
+<!-- ALL -->
+<div id="section-all" class="section active">
+  <div class="section-header">
+    <div class="section-title">🗂 全览</div>
+    <div class="section-desc">2026 上半年主要工作，共 6 条核心项目线。点击上方 Tab 查看详细述职内容。</div>
+  </div>
+  <div class="overview-grid">
+    <div class="mini-card">
+      <div class="mini-icon bg-red">❤️</div>
+      <div class="mini-content">
+        <div class="mini-title">品牌广告解决方案 &amp; UGC 情绪分析体系</div>
+        <div class="mini-desc">搭建品牌广告价值框架，同步开发 UGC 情绪量化工具作为品牌广告的数据支撑，为客户 pitch 和内部汇报提供实证</div>
+        <div class="mini-impact">15+ 品牌看板 · 50万+ 笔记打标 · Skill 封装上线</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-icon bg-blue">🎯</div>
+      <div class="mini-content">
+        <div class="mini-title">快消赛道战略优先级框架</div>
+        <div class="mini-desc">MA×ATW 矩阵对 20 个快消赛道战略分层，测算平台增量天花板，指导资源配置</div>
+        <div class="mini-impact">20 赛道 · 天花板 551 亿 · 完整 Deck 交付</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-icon bg-green">📊</div>
+      <div class="mini-content">
+        <div class="mini-title">66 大促运营监控系统</div>
+        <div class="mini-desc">覆盖商家报名/混资券/跃迁/标杆商家全链路，日更自动化，全部门统一信息源</div>
+        <div class="mini-impact">5 Tab · 每日自动拉数 · 覆盖 4 个部门</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-icon bg-purple">🏭</div>
+      <div class="mini-content">
+        <div class="mini-title">快消电商经营分析体系</div>
+        <div class="mini-desc">从 GMV 大盘 → 商家分层 → 载体结构 → 内容效率全链路诊断，支持多行业对比</div>
+        <div class="mini-impact">6 Tab 综合报告 · 逐行业漏斗诊断 · 自动更新</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-icon bg-orange">📦</div>
+      <div class="mini-content">
+        <div class="mini-title">货品供给机会识别框架</div>
+        <div class="mini-desc">通过搜索×GMV交叉，识别平台需求有缺口的品类 SPU，为招商提供底层数据支撑</div>
+        <div class="mini-impact">1146 个缺口 SPU · 综合缺口 1.24 亿</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-icon bg-teal">⚙️</div>
+      <div class="mini-content">
+        <div class="mini-title">数据工程 &amp; AI 基础设施</div>
+        <div class="mini-desc">UGC 打标 Pipeline 封装、RedBI 取数 SOP、多项目 Cron 自动化，让重复工作消失</div>
+        <div class="mini-impact">全链路 Skill 封装 · 3 套自动化系统 · 跨项目复用</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BRAND + UGC (合并) -->
+<div id="section-brand-ugc" class="section">
+  <div class="section-header">
+    <div class="section-title">❤️ 品牌广告解决方案 &amp; UGC 情绪分析体系</div>
+    <div class="section-desc">两条线并行推进：一方面搭建品牌广告产品框架，另一方面开发 UGC 情绪量化工具作为核心数据支撑，相互印证、共同服务客户</div>
+  </div>
+  <div class="project-grid">
+
+    <!-- 品牌广告方案 -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-orange">📢</div>
+          <span class="badge badge-done">已完成</span>
+        </div>
+        <div class="card-title">品牌广告解决方案体系</div>
+        <div class="card-tagline">一句话：重新定义小红书品牌广告能帮客户做什么，并按客户类型设计三套打法</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">背景 &amp; 为什么做</div>
+        <div class="body-text">
+          快消客户长期只投效果广告，存在"只洗同一批人、无法建立品牌忠诚度、媒介成本越来越贵"的结构性问题。品牌广告需求正在发生变化：更 commercial、更数据化、更需要 social &amp; 被动内容。小红书作为用户主动种草的平台，有独特的心智沉淀优势，但缺乏一套完整的产品叙事和解决方案。
+        </div>
+        <div class="quote-block">
+          "品牌是战略资产（stored asset），品牌资产变化对股价影响 = 盈利变化的 70%"——Aaker 框架。仅靠效果广告，短期财务指标好看，但在透支长期品牌资产。
+        </div>
+
+        <div class="sec-label">我做了什么 &amp; 逻辑</div>
+        <ul class="steps">
+          <li data-n="1"><strong>客户分层</strong>：将快消广告主分为 P0 国际成熟品牌（百威/宝洁等）/ P1 有钱国企（茅台/洋河等）/ P2 大白牌转品牌（元气森林等），三类诉求与打法完全不同</li>
+          <li data-n="2"><strong>Solution A（国际品牌）</strong>：5步品效闭环——品牌形象度量 → 内容种草 → 搜索承接 → 电商转化 → 效果归因回传，用数据证明品牌投入 ROI</li>
+          <li data-n="3"><strong>Solution B（国企/卫视品牌）</strong>：大曝光 + 国民认同感 + 年轻化翻译官，解决传统大品牌在小红书用户中的代沟问题</li>
+          <li data-n="4"><strong>Solution C（白牌转品牌）</strong>：数据验证 + 生意结合，先用小批量投放证明种草效果，再建议放量</li>
+          <li data-n="5"><strong>品牌广告价值体系</strong>：溢价 / 复购 / 拉新 / 降低效果成本的五层商业回报漏斗，制作成可 pitch 的完整 HTML Deck</li>
+        </ul>
+
+        <div class="sec-label">线下渠道 × 品牌联合营销 IP（述职核心项目）</div>
+        <div class="body-text">
+          针对快消品牌在线下渠道（鸣鸣很忙等零食折扣连锁）投入大量 Trade Marketing 预算但线上无水花的核心痛点，设计"<strong>流量众筹</strong>"模式：渠道大事件产生自然声量爆发时，牵引参与品牌主动在小红书做 KFS 放大。
+        </div>
+        <ul class="impacts">
+          <li>鸣鸣很忙 CNY 案例：核销率 95%（行业均值 28%）、9.5万人进店、32万+ UGC 沉淀、人群资产拉新 +72%</li>
+          <li>益达作为被动受益品牌：阅读声量 +132%、搜索 +40%，量化了 IP 效应的外溢价值</li>
+          <li>方案通过 L2（宝洁背景）述职，成为行业 Solution 核心武器</li>
+        </ul>
+
+        <div class="tags">
+          <span class="tag">品牌广告</span><span class="tag">Aaker 框架</span><span class="tag">客户分层</span><span class="tag">Trade Marketing</span><span class="tag">流量众筹</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- UGC情绪分析：为什么做 -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-red">❤️</div>
+          <span class="badge badge-done">已完成</span>
+        </div>
+        <div class="card-title">UGC 情绪分析体系：为什么做</div>
+        <div class="card-tagline">一句话：品牌广告需要证明"心智"变了——UGC 情绪就是量化心智的工具</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">业务背景 &amp; 为什么要做</div>
+        <div class="body-text">
+          品牌广告最大的挑战在于：效果难以量化，品牌主很难向上汇报"花了钱到底有没有用"。传统做法是词云/NPS，但粒度粗、主观性强，无法支撑 CMO 级别的决策。
+        </div>
+        <div class="quote-block">
+          会议纪要（5月20日，情绪洞察白皮书规划）：<br>
+          "CMO 当时用手机逐个拍下来，说这个特别好，因为特别的具体。" — 霸王茶姬 CMO 在看到我们的情绪看板后的反应。<br><br>
+          "我们可以帮助品牌看清自己的站位，品牌心智现在在哪里，你相对竞品的优势在哪里。"
+        </div>
+        <div class="body-text">
+          情绪分析解决了三件事：①量化品牌心智（SOV / TGI 指标体系）②竞品情绪对比（看谁占了什么情绪赛道）③直接联动业务决策（选品、内容方向、节点营销节奏）。这是品牌广告 Solution A 的核心数据工具。
+        </div>
+
+        <div class="sec-label">指标体系设计</div>
+        <ul class="impacts">
+          <li><strong>SOV</strong>（情绪份额）= 品牌在某情绪下的曝光量 ÷ 该情绪全行业总曝光量</li>
+          <li><strong>TGI</strong>（情绪强度指数）= 品牌情绪 SOV ÷ 品牌整体市场份额 × 100，&gt;100 表示该品牌在此情绪上相对强势</li>
+          <li><strong>情绪切角</strong>：深挖每个情绪的真实触发场景（用户为什么产生这个情绪）</li>
+          <li><strong>高转化洞察</strong>（接品牌一方数据时）：情绪 × 成交金额加权，找哪种情绪内容转化效率最高</li>
+        </ul>
+
+        <div class="tags">
+          <span class="tag">品牌心智量化</span><span class="tag">SOV / TGI</span><span class="tag">情绪切角</span><span class="tag">白皮书</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- UGC情绪分析：怎么做 Skill -->
+    <div class="card full-width">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-pink">🔬</div>
+          <span class="badge badge-done">Skill 已封装上线</span>
+        </div>
+        <div class="card-title">UGC 情绪分析 Skill：技术链路 &amp; 全量品牌覆盖</div>
+        <div class="card-tagline">一句话：从零搭建 LLM 打标 Pipeline，封装为可复用 Skill，最终为 15+ 品牌交付情绪看板</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">技术链路（四步）</div>
+        <ul class="steps">
+          <li data-n="1"><strong>数据获取</strong>：从 RedBI 拉取品牌 UGC 笔记（万~20万条），字段包含笔记标题/正文/曝光/互动/封面图。早期踩坑：API 接口上限 2 万条，修复后改为 browser 触发 CSV 全量导出（正确数据量 10-20 倍）</li>
+          <li data-n="2"><strong>LLM 打标（labeler.py）</strong>：设计 95 情绪标签体系，支持细粒度情绪（愉悦/惊喜/逗趣感/安心感/稀缺收藏价值等），内置去噪逻辑（过滤招聘/无关内容），经用户人工验证准确率从 40% → 85%+（v5 版本），另有 75 属性双维打标（23 功能性 + 52 情绪性）</li>
+          <li data-n="3"><strong>数据聚合（build_data.py）</strong>：按周聚合 SOV/TGI，计算情绪趋势、切角词云、功能属性分布、情绪×成交矩阵（如有一方数据）</li>
+          <li data-n="4"><strong>可视化看板（gen_html.py）</strong>：生成 6-Tab 交互式 HTML（情绪分布 / 情绪趋势 / 代表笔记 / 功能属性 / 情绪切角 / 高转化洞察），部署到内网 algo 平台 + GitHub Pages 双通道，附 Skill 宣传页</li>
+        </ul>
+
+        <div class="sec-label">已服务品牌（15+）</div>
+        <div class="brand-chips">
+          <span class="brand-chip">霸王茶姬</span>
+          <span class="brand-chip">沃尔玛</span>
+          <span class="brand-chip">喜力</span>
+          <span class="brand-chip">费列罗</span>
+          <span class="brand-chip">梦龙</span>
+          <span class="brand-chip">雀巢咖啡</span>
+          <span class="brand-chip">鸣鸣很忙</span>
+          <span class="brand-chip">Kinder</span>
+          <span class="brand-chip">桂格</span>
+          <span class="brand-chip">汾酒</span>
+          <span class="brand-chip">泸州老窖</span>
+          <span class="brand-chip">飞鹤</span>
+          <span class="brand-chip">爱他美</span>
+          <span class="brand-chip">安利纽崔莱</span>
+          <span class="brand-chip">梦龙</span>
+          <span class="brand-chip blue">速溶咖啡行业（45品牌）</span>
+          <span class="brand-chip blue">休闲零食行业</span>
+          <span class="brand-chip blue">方便面行业</span>
+          <span class="brand-chip green">茶饮咖行业（13品牌）</span>
+        </div>
+
+        <div class="sec-label">关键案例 &amp; 洞察</div>
+        <ul class="impacts">
+          <li><strong>鸣鸣很忙 CNY Campaign</strong>：惊喜情绪 SOV 在活动期 7.9 倍爆发（W1-4均值 5.0% → W5-8均值 39.5%），为品牌主量化了 Campaign 效果</li>
+          <li><strong>霸王茶姬高转化分析</strong>（接入一方数据）：逗趣感内容转化效率最高，均值成交 ¥12,955 / 篇，远超其他情绪，直接指导内容方向</li>
+          <li><strong>沃尔玛 CNY Campaign</strong>：将 6 大情绪×场景×货盘一一对应，情绪洞察直接联动选品决策（如"逗趣感"对应香菜酸奶/麻将曲奇）</li>
+          <li><strong>下线城市 UGC 双组对比</strong>（10 万 + 条）：量化验证高曝光内容中"惊喜感"等情绪属性命中率显著高于低曝光组</li>
+          <li><strong>情绪洞察白皮书</strong>：现已规划对外发布，包含食品饮料/酒/餐饮多行业，作为品牌广告营销工具的重要背书</li>
+        </ul>
+
+        <div class="highlight">
+          <div class="highlight-title">Skill 化成果</div>
+          <div class="highlight-text">整套 Pipeline 已封装为内部 Skill（ugc-emotion-dashboard，GitLab projectId: 75797），任何同学按 SOP 均可为新品牌上线看板，单个品牌从零到看板上线时间：2 天 → 4 小时。宣传海报已在内部渠道传播，CMO 级客户现场拍照留存。</div>
+        </div>
+
+        <div class="tags">
+          <span class="tag">LLM 打标</span><span class="tag">95 情绪体系</span><span class="tag">75 品牌属性</span><span class="tag">ECharts</span><span class="tag">Python Pipeline</span><span class="tag">Skill 封装</span><span class="tag">GitHub Pages</span>
+        </div>
+        <div class="links">
+          <a class="link-btn" href="https://jrchuckie.github.io/ugc-emotion-dashboard/" target="_blank">🔗 茶饮咖情绪看板</a>
+          <a class="link-btn" href="https://jrchuckie.github.io/walmart-emotion-dashboard/" target="_blank">🔗 沃尔玛情绪看板</a>
+          <a class="link-btn" href="https://jrchuckie.github.io/coffee-industry-emotion-dashboard/" target="_blank">🔗 速溶咖啡行业看板</a>
+          <a class="link-btn" href="https://jrchuckie.github.io/heineken-emotion-dashboard/" target="_blank">🔗 喜力看板</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- STRATEGY -->
+<div id="section-strategy" class="section">
+  <div class="section-header">
+    <div class="section-title">🎯 快消赛道战略框架</div>
+    <div class="section-desc">为小红书商业化快消团队搭建两套战略工具：赛道优先级矩阵 &amp; 货品供给机会识别，服务 leader 资源分配决策</div>
+  </div>
+  <div class="project-grid">
+
+    <div class="card full-width">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-blue">🗺️</div>
+          <span class="badge badge-done">已完成</span>
+        </div>
+        <div class="card-title">FMCG 赛道战略优先级框架</div>
+        <div class="card-tagline">一句话：告诉团队，20 个快消赛道哪些值得重点押注，哪些保持现状即可，哪些应该降低优先级</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">背景 &amp; 问题</div>
+        <div class="body-text">快消行业有 20+ 赛道，各团队资源有限，凭感觉排优先级主观性强、难以对上对齐。需要一套可量化、可答辩的战略分层工具，支持老板决策。</div>
+
+        <div class="sec-label">框架设计（MA × ATW 矩阵）</div>
+        <ul class="steps">
+          <li data-n="1"><strong>Market Attractiveness（市场吸引力）</strong>：营销预算规模 35% + 市场增速 35% + 集中度 CR100 15% + 新兴品牌活跃度 15%</li>
+          <li data-n="2"><strong>Ability to Win（平台胜率）</strong>：存量份额 20% + 增速 15% + 决策链路契合度 25% + 平台独特解法 40%</li>
+          <li data-n="3"><strong>数据收集</strong>：20 个赛道的市场规模/广告流水/UGC量/搜索量/CR100集中度/VC融资热度等多源数据</li>
+          <li data-n="4"><strong>天花板测算（POD）</strong>：以字节市占为参照，测算 XHS 在每个赛道的 SoW 天花板和 Take Rate 天花板，折算成 2030 年增量规模</li>
+          <li data-n="5"><strong>食品赛道下钻</strong>：对优先级最高的食品赛道进一步拆解 6 个子赛道，休闲零食列为 Double Down 首选</li>
+        </ul>
+
+        <div class="sec-label">结论（20 赛道分层）</div>
+        <div class="brand-chips">
+          <span class="brand-chip">Double Down（6）：母婴食品</span>
+          <span class="brand-chip">母婴用品</span>
+          <span class="brand-chip">保健食品</span>
+          <span class="brand-chip">食品</span>
+          <span class="brand-chip">蛋白食饮</span>
+          <span class="brand-chip">宠物食品</span>
+          <span class="brand-chip blue">Invest to Win（6）：酒类</span>
+          <span class="brand-chip blue">特医</span>
+          <span class="brand-chip blue">饮料</span>
+          <span class="brand-chip blue">传统滋补</span>
+          <span class="brand-chip blue">文具礼品</span>
+          <span class="brand-chip blue">宠物用品</span>
+          <span class="brand-chip gray">Defend &amp; Harvest：餐饮 / 医疗</span>
+          <span class="brand-chip gray">Deprioritize：OTC / 药品 / 宠物药品 等</span>
+        </div>
+
+        <div class="sec-label">Impact</div>
+        <ul class="impacts">
+          <li>平台总天花板测算：551 亿（较当前增量 +458 亿），为资源配置提供量化依据</li>
+          <li>SoW 天花板：母婴用品 3.10%；Take Rate 天花板：母婴食品 0.796%</li>
+          <li>制作 21 页交互式 HTML Deck，完整叙事包含市场规模 / POD 评估 / 赛道数据表 / 天花板测算</li>
+        </ul>
+
+        <div class="tags"><span class="tag">MA×ATW</span><span class="tag">战略分层</span><span class="tag">市场分析</span><span class="tag">天花板测算</span><span class="tag">FMCG</span></div>
+        <div class="links">
+          <a class="link-btn" href="https://jrchuckie.github.io/fmcg-strategy-framework/" target="_blank">🔗 完整战略 Deck</a>
+          <a class="link-btn" href="https://jrchuckie.github.io/fmcg-strategy-framework/index-food-drilldown.html" target="_blank">🔗 食品赛道下钻</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-green">📦</div>
+          <span class="badge badge-done">已完成</span>
+        </div>
+        <div class="card-title">赛道货品供给机会识别框架</div>
+        <div class="card-tagline">一句话：找出"用户有需求但平台没货"的 SPU 缺口，精准指导招商引货</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">背景 &amp; 问题</div>
+        <div class="body-text">电商平台的 GMV 天花板，很大程度上受制于供给侧——有些赛道用户搜了买不到，需求没被承接。如何系统性识别这些供给缺口？</div>
+
+        <div class="sec-label">四步框架</div>
+        <ul class="steps">
+          <li data-n="1"><strong>供给驱动校验</strong>：80 个四级类目全量 Pearson 相关性分析，验证"搜索量 → GMV"的因果逻辑（相关性成立才有意义继续找缺口）</li>
+          <li data-n="2"><strong>度量缺口</strong>：SPU × 搜索词交叉——用户在搜哪些词，但对应 SPU 在平台无动销 SKU</li>
+          <li data-n="3"><strong>优先级排序</strong>：按需求缺口规模（估算用搜索量×渗透率）综合排序，产出招商清单</li>
+          <li data-n="4"><strong>引货验证</strong>：输出可直接交给商务同学的品牌清单</li>
+        </ul>
+
+        <div class="sec-label">Impact</div>
+        <ul class="impacts">
+          <li>识别 1,146 个缺口 SPU，综合需求缺口估算 1.24 亿</li>
+          <li>为招商提供数据驱动的目标清单，替代凭感觉找品类</li>
+        </ul>
+
+        <div class="tags"><span class="tag">供给缺口</span><span class="tag">搜索分析</span><span class="tag">SPU</span><span class="tag">招商</span></div>
+        <div class="links"><a class="link-btn" href="https://jrchuckie.github.io/supply-strategy-framework/" target="_blank">🔗 框架 Deck</a></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-orange">🍟</div>
+          <span class="badge badge-done">已完成</span>
+        </div>
+        <div class="card-title">全网休闲零食市场研究</div>
+        <div class="card-tagline">一句话：搞清楚零食市场在哪里增长、什么品类在 Emerging，给销售找精准拓客目标</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">背景</div>
+        <div class="body-text">休闲零食是 Double Down 赛道，但内部对于"哪些子赛道真正在增长"认知不一致。需要一套 bottom-up 的市场数据做底。</div>
+
+        <div class="sec-label">关键产出</div>
+        <ul class="impacts">
+          <li>Y25 全网电商零食 GMV：¥1,178 亿（YOY -3.6%），14 品类框架搭建</li>
+          <li>识别 6 个 Emerging 子赛道：魔芋（+70%）、功能软糖（+20%）、蛋白棒（+28%）等</li>
+          <li>识别空白赛道：GLP-1 友好食品（国内目前尚无专门品牌，1-2 年内爆发）</li>
+          <li>制作 6-Tab 交互报告：品类矩阵 / Emerging 赛道 / MA×ATW 打分 / 品牌榜单</li>
+        </ul>
+
+        <div class="tags"><span class="tag">市场研究</span><span class="tag">Emerging 赛道</span><span class="tag">休闲零食</span><span class="tag">拓客</span></div>
+        <div class="links"><a class="link-btn" href="https://jrchuckie.github.io/snack-market-dashboard/" target="_blank">🔗 市场报告</a></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- OPS -->
+<div id="section-ops" class="section">
+  <div class="section-header">
+    <div class="section-title">📊 66 大促运营监控系统</div>
+    <div class="section-desc">从零搭建大促全周期运营监控体系，日更自动化，覆盖 4 个部门全部关键指标</div>
+  </div>
+  <div class="project-grid">
+
+    <div class="card full-width">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-green">📡</div>
+          <span class="badge badge-live">大促期自动运行</span>
+        </div>
+        <div class="card-title">66 大促全局监控看板</div>
+        <div class="card-tagline">一句话：让运营同学每天打开一个页面就知道大促进展，不用手动拉数、不用开四个表格</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">背景 &amp; 问题</div>
+        <div class="body-text">66 大促（5月22日-6月18日）覆盖 4 个部门、4 大运营模块（商家报名/混资券/B4-跃迁/标杆商家），每天需要从不同 RedBI 数据源手动汇总进度，非常耗时且容易信息不对齐。</div>
+
+        <div class="sec-label">我做了什么 &amp; 怎么做的</div>
+        <ul class="steps">
+          <li data-n="1"><strong>需求对齐</strong>：与 4 个部门（行业一/二/三部 + 生态）逐一确认指标口径、目标数值和数据来源</li>
+          <li data-n="2"><strong>数据接入</strong>：对接 5 个 RedBI shortcut（商家报名/混资券/B4-跃迁/标杆商家/大盘），Python 脚本自动鉴权拉数</li>
+          <li data-n="3"><strong>看板设计</strong>：5 Tab（Overview / 商家报名 / 混资券 / B4-跃迁 / 标杆商家），Overview 四列并排甜甜圈 + 预警双栏（完成度低 / 增速慢）</li>
+          <li data-n="4"><strong>自动化 Cron</strong>：每日 8:00 自动拉数更新，通过 Hi 消息推送最新进度到个人，全程无需手动触发</li>
+          <li data-n="5"><strong>持续迭代</strong>：大促期间响应每日需求变更，共迭代 900+ 个版本，处理了数据源变更/字段重命名/口径调整等问题</li>
+        </ul>
+
+        <div class="sec-label">各模块覆盖情况</div>
+        <ul class="impacts">
+          <li><strong>商家报名</strong>：4 部门分别追踪，固定目标（合计 109,621 家），含日环比和明细 30 行表格</li>
+          <li><strong>混资券</strong>：可报名/已报名/有效商家三层漏斗，赛道细分，日环比追踪</li>
+          <li><strong>B4- 跃迁</strong>：商家陪跑 → 任务下发 → GMV 完成 → 跃迁率全链路，按部门明细展示</li>
+          <li><strong>标杆商家</strong>：200 家标杆商家 GMV 进度，修复了固定快照问题（改为动态时间范围拉取）</li>
+        </ul>
+
+        <div class="sec-label">Impact</div>
+        <ul class="impacts">
+          <li>替代人工拉数，每次节省 2-3 小时，大促期间累计节省 100+ 小时</li>
+          <li>统一 4 部门信息源，减少每日汇报中因口径不一导致的反复确认</li>
+          <li>自动预警：完成度低/增速慢的部门主动标红，让风险早于人工发现</li>
+        </ul>
+
+        <div class="tags"><span class="tag">大促运营</span><span class="tag">Cron 自动化</span><span class="tag">RedBI</span><span class="tag">ECharts</span><span class="tag">多部门协同</span></div>
+        <div class="links"><a class="link-btn" href="https://jrchuckie.github.io/dashboard-66/" target="_blank">🔗 大促看板</a></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-teal">📺</div>
+          <span class="badge badge-live">大促期日更</span>
+        </div>
+        <div class="card-title">店播 &amp; K 播精分目标监控</div>
+        <div class="card-tagline">一句话：每天自动追踪每个 GMV 段的目标场次，零手动操作</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">背景 &amp; 做了什么</div>
+        <div class="body-text">大促期间店播和 K 播各有 5 个 GMV 分层的精分目标，每天需要对比实际场次完成情况，找出哪个层级存在缺口。搭建独立监控系统，Cron 日更，晨报形式推送。</div>
+        <ul class="impacts">
+          <li>对接 BI 数据源（DGMV &gt; 5000，直播带货身份 = 店/K，行业运营三部）</li>
+          <li>按 5 个 GMV 层级分别展示完成率 + 进度条 + 超额/不足标注</li>
+          <li>Cron 每天 8:00 自动拉数，节省每日 1-2 小时汇总时间</li>
+        </ul>
+        <div class="tags"><span class="tag">直播监控</span><span class="tag">精分</span><span class="tag">自动化</span></div>
+        <div class="links"><a class="link-btn" href="https://jrchuckie.github.io/66-promo-dashboard/" target="_blank">🔗 店播/K播看板</a></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- EC 经营分析 -->
+<div id="section-ec" class="section">
+  <div class="section-header">
+    <div class="section-title">🏭 快消电商经营分析体系</div>
+    <div class="section-desc">系统性诊断快消品类电商经营健康度，从 GMV 大盘一路拆解到最末端的内容效率，找出真正的问题所在</div>
+  </div>
+  <div class="project-grid">
+
+    <div class="card full-width">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-purple">🔎</div>
+          <span class="badge badge-done">已交付</span>
+        </div>
+        <div class="card-title">快消电商经营综合诊断报告</div>
+        <div class="card-tagline">一句话：把一个行业的电商健康度从 GMV 到最末端的笔记效率全拆清楚，找到真正的断层在哪里</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">背景 &amp; 问题</div>
+        <div class="body-text">
+          电商经营数据分散在多个 BI 看板，运营同学很难一眼看清"GMV 为什么下来了/上去了"。需要一套结构化的诊断框架，从顶层 GMV 逐层拆解到末端，定位具体断点。
+        </div>
+
+        <div class="sec-label">诊断框架（5 层漏斗）</div>
+        <ul class="steps">
+          <li data-n="1"><strong>GMV 大盘</strong>：按行业分组看整体 GMV 趋势，拆解商家数 × 单店产出（ARPU）两个驱动因子</li>
+          <li data-n="2"><strong>商家分层</strong>：B5/6 头部商家留存 / B4- 商家跃迁 / 新开商家活跃度三段分层，用气泡图+条形图可视化各层级健康度</li>
+          <li data-n="3"><strong>载体结构</strong>：店播 / K播 / 商笔三类载体 GMV 占比及环比，识别哪类载体在贡献增量、哪类在收缩</li>
+          <li data-n="4"><strong>笔记（商笔）诊断</strong>：发布量 → 曝光 → 点击（CTR1）→ 商卡点击（CTR2）→ 成交（CVR）五步漏斗，逐行业对比找断层</li>
+          <li data-n="5"><strong>店播 &amp; K播诊断</strong>：GPM / 场均 GMV / 场次数等核心指标按行业分组排序，识别效率洼地</li>
+        </ul>
+
+        <div class="sec-label">覆盖行业 &amp; 关键发现</div>
+        <div class="brand-chips">
+          <span class="brand-chip">休闲食品</span><span class="brand-chip">宠物</span><span class="brand-chip">母婴</span><span class="brand-chip">美妆</span><span class="brand-chip">保健品</span><span class="brand-chip">饮料</span><span class="brand-chip">家居</span><span class="brand-chip">服饰</span><span class="brand-chip">虚拟</span><span class="brand-chip gray">等 10+ 行业</span>
+        </div>
+        <ul class="impacts" style="margin-top:12px">
+          <li><strong>宠物行业</strong>：CTR1=21.6% 全行业最高（内容吸引力强），但 CTR2=5.54% 全行业最低——内容留人了，但商卡引导断层，定位清晰</li>
+          <li><strong>虚拟赛道</strong>：发布量 +357%，但 GPM=14.5 全行业最低——内卷严重，内容投入产出比极低</li>
+          <li><strong>B4- 跃迁分析</strong>：识别出哪些行业商家从 B4- 跃迁到 B4 的转化率高，哪些存在断点</li>
+          <li><strong>新开商家</strong>：重构为双条形图（新开商家数/店均GMV），直观识别哪个行业新商家质量高</li>
+        </ul>
+
+        <div class="sec-label">迭代过程</div>
+        <div class="body-text">
+          从 v1 简单数据表起步，快速迭代至 v5.0，最终形成 6-Tab 完整报告。过程中解决了 ECharts 在 display:none 容器初始化宽高=0的经典 bug、Tab 切换图表不渲染等问题，并沉淀为可复用的技术规范。
+        </div>
+
+        <div class="tags"><span class="tag">经营分析</span><span class="tag">GMV 拆解</span><span class="tag">5 层漏斗</span><span class="tag">商家分层</span><span class="tag">逐行业诊断</span></div>
+        <div class="links">
+          <a class="link-btn" href="https://jrchuckie.github.io/industry3-insight-report/" target="_blank">🔗 综合经营报告</a>
+          <a class="link-btn" href="https://jrchuckie.github.io/b-level-health-dashboard/" target="_blank">🔗 B 分层健康度</a>
+          <a class="link-btn" href="https://jrchuckie.github.io/industry3-insight-report/note-diag.html" target="_blank">🔗 商笔逐行业诊断</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- INFRA -->
+<div id="section-infra" class="section">
+  <div class="section-header">
+    <div class="section-title">⚙️ 数据工程 &amp; AI 基础设施</div>
+    <div class="section-desc">支撑所有项目的底层能力——让分析工作可复用、可自动化、可交接</div>
+  </div>
+  <div class="project-grid">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-teal">🔧</div>
+          <span class="badge badge-done">Skill 已上线</span>
+        </div>
+        <div class="card-title">UGC 打标全链路封装</div>
+        <div class="card-tagline">把反复做的"拉数→打标→生成看板→部署"打包成一键 Skill</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">核心组件</div>
+        <ul class="impacts">
+          <li>labeler.py v5：95 情绪 + 75 属性双维打标，支持大健康/食饮两套词库</li>
+          <li>底表版 pipeline：直接读 red_lab.app_emotion_skill_df，覆盖率接近 100%</li>
+          <li>RedBI 取数 SOP：browser 触发导出，解决 API 2 万条上限问题</li>
+          <li>xhs-image-fetcher Skill：品牌封面图精准匹配三步工作流</li>
+          <li>algo 内网 + GitHub Pages 双通道部署</li>
+        </ul>
+        <div class="highlight">
+          <div class="highlight-title">提效结果</div>
+          <div class="highlight-text">单个新品牌从零到看板上线：2 天 → 4 小时。Pipeline 已为 15+ 品牌服务，总打标量超 50 万条笔记。</div>
+        </div>
+        <div class="tags"><span class="tag">Skill 封装</span><span class="tag">Python</span><span class="tag">LLM</span><span class="tag">GitLab</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon-row">
+          <div class="card-icon bg-yellow">⏰</div>
+          <span class="badge badge-live">运行中</span>
+        </div>
+        <div class="card-title">多项目 Cron 自动化体系</div>
+        <div class="card-tagline">数据看板自己跑、自己更新、自己发通知</div>
+      </div>
+      <div class="card-body">
+        <div class="sec-label">已上线任务</div>
+        <ul class="impacts">
+          <li>66 大促全局看板：每日 8:00 自动拉数更新 + Hi 推送</li>
+          <li>店播/K播精分看板：每日 8:00 自动更新</li>
+          <li>标杆商家 GMV：每日动态时间范围拉取聚合</li>
+          <li>本 Portfolio 周报：每周五 17:30 生成并推送</li>
+        </ul>
+        <div class="sec-label">Impact</div>
+        <ul class="impacts">
+          <li>大促期间累计节省人工操作 100+ 小时</li>
+          <li>数据自动到 Hi，团队无需主动查询</li>
+        </ul>
+        <div class="tags"><span class="tag">Cron</span><span class="tag">自动化</span><span class="tag">Hi 推送</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div id="section-timeline" class="section">
+  <div class="section-header">
+    <div class="section-title">📅 时间线</div>
+    <div class="section-desc">2026 H1 关键节点回顾</div>
+  </div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-month">2026年 3月</div>
+      <div class="tl-events">
+        <div class="tl-event"><span class="tl-ico">📊</span>启动快消电商 dept4 周报自动化，完成 RedBI 取数 + 行业分组映射体系</div>
+        <div class="tl-event"><span class="tl-ico">📝</span>线下渠道×品牌联合营销 IP 方案述职，通过 L2（宝洁背景）评审</div>
+        <div class="tl-event"><span class="tl-ico">💡</span>品牌广告价值体系研究：Aaker 框架 + 三类客户分层（P0/P1/P2）</div>
+        <div class="tl-event"><span class="tl-ico">🔧</span>开发 xhs-image-fetcher Skill，封装品牌配图三步工作流，沉淀 SOP</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-month">2026年 4月</div>
+      <div class="tl-events">
+        <div class="tl-event"><span class="tl-ico">❤️</span>UGC 情绪分析项目全面启动：茶饮咖 13 品牌 16K 条打标，验证 Pipeline 可行性</div>
+        <div class="tl-event"><span class="tl-ico">🔬</span>打标准确率迭代：人工验证 100 条（40% → 85%+），优化去噪逻辑</div>
+        <div class="tl-event"><span class="tl-ico">🏷️</span>Attributes v3 上线（75 维度），霸王茶姬高转化情绪分析（接一方数据）</div>
+        <div class="tl-event"><span class="tl-ico">🏪</span>沃尔玛 / 鸣鸣很忙 / 喜力等 8+ 品牌看板陆续上线，Skill 宣传海报制作发布</div>
+        <div class="tl-event"><span class="tl-ico">📦</span>货品供给框架：识别 1,146 个缺口 SPU，综合缺口 1.24 亿</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-month">2026年 5月上旬</div>
+      <div class="tl-events">
+        <div class="tl-event"><span class="tl-ico">🗺️</span>FMCG 战略框架完成：20 赛道 MA×ATW 矩阵 + 天花板 551 亿测算，21 页 Deck 交付</div>
+        <div class="tl-event"><span class="tl-ico">🍟</span>休闲零食市场报告 V9：6 个 Emerging 赛道，识别 GLP-1 空白赛道</div>
+        <div class="tl-event"><span class="tl-ico">📡</span>66 大促监控看板 v1 上线：B4+ / 混资券 / B4- 三大板块，4 部门数据接入</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-month">2026年 5月下旬</div>
+      <div class="tl-events">
+        <div class="tl-event"><span class="tl-ico">⏰</span>大促看板 Cron 全自动化：日更拉数 + Hi 推送，摆脱人工操作</div>
+        <div class="tl-event"><span class="tl-ico">📺</span>店播/K播精分看板独立上线，日更 Cron 配置</div>
+        <div class="tl-event"><span class="tl-ico">🏭</span>电商经营分析体系启动，v1→v5.0 快速迭代，5 层漏斗结构确立</div>
+        <div class="tl-event"><span class="tl-ico">💬</span>情绪洞察白皮书规划会：CMO 现场拍照看板，确定对外发布架构</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-month">2026年 6月</div>
+      <div class="tl-events">
+        <div class="tl-event"><span class="tl-ico">🔎</span>电商经营诊断报告上线：6 Tab 综合报告 + 逐行业商笔漏斗诊断</div>
+        <div class="tl-event"><span class="tl-ico">🏪</span>商家分层 Tab 重构：B4+ 瀑布图（19 个行业分组），标杆商家 GMV 修复</div>
+        <div class="tl-event"><span class="tl-ico">🌶️</span>Portfolio 自动化建立，每周五 17:30 自动更新推送</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
